@@ -8,7 +8,7 @@ Create a program to collect at least 500 Wikipedia pages and links from these pa
 ## Project Decomposition
 Task Number | Task Title | COMPLETED
 ----------- | ---------- | ---------
-1 | Collect Data From Wiki-Pages | 
+1 | Collect Data From Wiki-Pages | X
 2 | Collect Similarity Data (Word Frequencies And/Or Word2vec)| 
 3 | Construct Weighted Graph | 
 4 | Persist The Graph | 
