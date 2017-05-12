@@ -10,7 +10,7 @@ Task Number | Task Title | COMPLETED
 ----------- | ---------- | ---------
 1 | Collect Data From Wiki-Pages | X
 2 | Collect Similarity Data (Word Frequencies And/Or Word2vec)| 
-3 | Construct Weighted Graph | 
+3 | Construct Weighted Graph | X
 4 | Persist The Graph | 
 5 | Visualize The Graph | 
 6 | Report The Number Of Spanning Trees | 
