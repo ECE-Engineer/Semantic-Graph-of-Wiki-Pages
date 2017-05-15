@@ -9,13 +9,12 @@ Create a program to collect at least 500 Wikipedia pages and links from these pa
 Task Number | Task Title | COMPLETED
 ----------- | ---------- | ---------
 1 | Collect Data From Wiki-Pages | X
-2 | Collect Similarity Data (Word Frequencies And/Or Word2vec)| 
+2 | Collect Similarity Data (Word Frequencies And/Or Word2vec)| X
 3 | Construct Weighted Graph | X
-4 | Persist The Graph | 
-5 | Visualize The Graph | 
-6 | Report The Number Of Spanning Trees | 
-7 | Construct A Priority Queue | 
-8 | Perform Dijkstra's Shortest Path Algorithm | 
+4 | Persist The Graph | X
+5 | Visualize The Graph | X
+6 | Report The Number Of Spanning Trees | X
+7 | Perform Dijkstra's Shortest Path Algorithm W/ A Priority Queue| 
 
 ## Latest Stable Copy
 [Class Project Zip](--------------------)
