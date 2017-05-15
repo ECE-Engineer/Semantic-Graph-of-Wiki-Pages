@@ -1,78 +1,124 @@
-import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-
 import java.io.IOException;
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Created by Kyle on 5/8/2017.
+ * @author Kyle Zeller
+ * Webscraper is used to collect all the necessary information about a given wiki page.
  */
-public class WebScraper {
+public class WebScraper implements Serializable {
     private String url;
     private HashMap<String, Integer> wordMap;
-    private HashMap<String, Integer> linkMap;
-    private Document doc;
+    private HashSet<String> linkMap;
+    private String fileHeader;
 
+    /**
+     * Creates WebScraper for pulling all the wiki data
+     * @param u is a url for a wiki page
+     */
     WebScraper (String u) throws IOException {
         url = u;
-        doc = Jsoup.connect(url).get();
+        wordMap = new HashMap<>();
+        linkMap = new HashSet<>();
     }
 
+    /**
+     * Returns the word HashMap
+     * @return returns the word HashMap
+     */
+    public HashMap<String, Integer> getWordMap() {
+        return wordMap;
+    }
+
+    /**
+     * Returns the url used to create the WebScraper
+     * @return returns the url used to create the WebScraper
+     */
     public String getUrl() {
         return url;
     }
 
-    public void setUrl(String u) throws IOException {
-        this.url = u;
-        wordMap.clear();
-        linkMap.clear();
-        doc = Jsoup.connect(url).get();
+    /**
+     * Returns the HashSet of all the links in the wiki page
+     * @return returns the HashSet of all the links in the wiki page
+     */
+    public HashSet<String> getLinkKeys() {
+        //Get the keys
+        return linkMap;
     }
 
-    public Set<String> getLinkKeys() {
+    /**
+     * Returns an arrayList of links
+     * @param num is used to cap the number of links to be returned
+     * @return returns an arrayList of links
+     */
+    public ArrayList<String> getLinkKeys(int num) {
         //Get the keys
-        return linkMap.keySet();
-    }
-
-    public String[] getLinkKeys(int num) {
-        //Get the keys
-        String[] temp = new String[num];
-        int counter = 0;
-        Set<String> linkSet = linkMap.keySet();
-        for (String ele : linkSet) {
-            if (counter == num)
+        ArrayList<String> temp = new ArrayList<>();
+        int size = linkMap.size();
+        int counter = (size < num) ? size : num;
+        for (String ele : linkMap) {
+            if (counter == 0)
                 break;
             else
-                temp[counter] = ele;
-            counter++;
+                temp.add(ele);
+            counter--;
         }
         return temp;
     }
 
-    public void setLinkMap() {
+    /**
+     * Returns the fileHeader from the WebScraper
+     * @param doc is used to set & get the fileHeader
+     * @return returns the fileHeader from the WebScraper
+     */
+    public String getFileHeader(Document doc) throws IOException {
+        fileHeader = doc.title();
+        return fileHeader;
+    }
+
+    /**
+     * It is used to set the HashSet with all the valid links in a wiki page
+     * @param doc is used to set the HashSet with all the valid links in a wiki page
+     */
+    public void setLinkMap(Document doc) throws IOException {
+        fileHeader = doc.title();
         //Collect all the links
-        Elements links = doc.select(".mw-content-ltr a");
-        linkMap = new HashMap<>();
-        for (Element ele : links) {
+        Element pageContent = doc.select("div.mw-content-ltr").first();
+        Elements paragraphs = pageContent.select("p");
+        Elements links = paragraphs.select("a[href]");
+
+        for (Element link : links) {
+            String temp = link.attr("href");
+            //System.out.println(temp);
             //Filter the links for the wiki pages ONLY as non-junk wiki pages
-            if ((ele.attr("abs:href").toString().contains("https://en.wikipedia.org/wiki/")) && (!ele.attr("abs:href").toString().contains("Wikipedia:")) && (!ele.attr("abs:href").toString().contains("#")) && (!ele.attr("abs:href").toString().contains("%")) && (!ele.attr("abs:href").toString().contains("Special:")) && (!ele.attr("abs:href").toString().contains(".php")) && (!ele.attr("abs:href").toString().contains("File:")) && (!ele.attr("abs:href").toString().contains("Template"))) {
-                //Check to see if the key is already in the HASHMAP
-                String temp = ele.attr("abs:href").toString();
-                if (linkMap.containsKey(temp))
-                    linkMap.put(temp, (linkMap.get(temp) + 1));
-                else
-                    linkMap.put(temp, 1);
+            if ((temp.contains("/wiki/")) && (!temp.contains("Wikipedia:")) && (!temp.contains("%")) && (!temp.contains("Special:")) && (!temp.contains("Help")) && (!temp.contains(".php")) && (!temp.contains("cite")) && (!temp.contains("File:")) && (!temp.contains("Template"))) {
+                //Check to see if the key is already in the HASHSET
+                linkMap.add(temp);
             }
         }
     }
 
+    /**
+     * Returns the frequency of a word in a wiki page
+     * @param s is used to get the frequency of a word in a wiki page
+     * @return returns the frequency of a word in a wiki page
+     */
     public int getFreq(String s) {
         return wordMap.get(s);
     }
 
+    /**
+     * Returns the most frequently occurring word on a wiki page
+     * @param wKeys is used to identify the most frequently occurring word
+     * @return returns the most frequently occurring word on a wiki page
+     */
     public String getMostFreqWord(Set<String> wKeys) {
         //Find the most frequent word in the document
         String mostFreqWord = "";
@@ -89,11 +135,20 @@ public class WebScraper {
         return mostFreqWord;
     }
 
+    /**
+     * Returns a set of all the words in the word HashMap
+     * @return a set of all the words in the word HashMap
+     */
     public Set<String> getWordKeys() {
         //Get the keys
         return wordMap.keySet();
     }
 
+    /**
+     * Returns an array of a specified number
+     * @param num is used to set a cap on the number of words to be returned
+     * @return returns an array of Strings of a specified number
+     */
     public String[] getWordKeys(int num) {
         //Get the keys
         String[] temp = new String[num];
@@ -109,7 +164,12 @@ public class WebScraper {
         return temp;
     }
 
-    public void setWordMap() throws IOException {
+    /**
+     * Set the HashMap of words and their occurrences in the wiki page
+     * @param doc is used to set the HashMap of words and their occurrences in the wiki page
+     */
+    public void setWordMap(Document doc) throws IOException {
+        fileHeader = doc.title();
         //Pull all the words from the paragraphs of the Wiki Page
         Elements paragraphs = doc.select(".mw-content-ltr p");
 
@@ -150,7 +210,6 @@ public class WebScraper {
                 , "be", "into", "also", "since", "such", "while", "really", "said", "goes", "our"};
 
         //Create a HashMap to add after deleting the filler words and keep track of the frequency of each occurrence of a word
-        wordMap = new HashMap<>();
         for (int i = 0; i < allTextArray.length; i++) {
             if (allTextArray[i].length() > MIN_WORD_LENGTH) {
                 //Check to see if the word is not "filler"
