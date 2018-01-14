@@ -149,7 +149,7 @@ public class GUI extends PriorityQueue<Pair> {
     public ArrayList<String> dijkstraSPA(String src, String dst) {
         PriorityQueue < Pair >  prq = new PriorityQueue < Pair > ();
         //get the string keys to all the nodes
-        Set<String> nodeSet = graph.nodeKeys();
+        HashSet<String> nodeSet = new
         //keep track of where you visited
         ArrayList<String> path = new ArrayList<>();
         while (!nodeSet.isEmpty()) {

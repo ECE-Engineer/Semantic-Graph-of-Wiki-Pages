@@ -14,7 +14,7 @@ Task Number | Task Title | COMPLETED
 4 | Persist The Graph | X
 5 | Visualize The Graph | X
 6 | Report The Number Of Spanning Trees | X
-7 | Perform Dijkstra's Shortest Path Algorithm W/ A Priority Queue| 
+7 | Perform Dijkstra's Shortest Path Algorithm W/ A Priority Queue| X
 
 ## Latest Stable Copy
 [Class Project Zip](--------------------)

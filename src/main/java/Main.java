@@ -43,7 +43,7 @@ public class Main {
 
         RandomAccessFile file = new RandomAccessFile("data/graph.dot", "rw");
         file.setLength(0);
-        file.write("digraph G {\n".getBytes("UTF-8"));
+        file.write("digraph G {\n".getBytes("latin1"));
         gui.graph.getEdges().forEach(edge -> {
             try {
                 file.write(("\"" + edge.getSrc().getLabel().replaceAll("-", " ") + "\" -> \"" + edge.getDst().getLabel().replaceAll("-", " ") + "\"[label=\"" + edge.getWeight() + "\"];\n").getBytes("UTF-8"));
@@ -53,10 +53,6 @@ public class Main {
         });
         file.write("}".getBytes("UTF-8"));
 
-        //save the graph to a file
-        Runtime rt = Runtime.getRuntime();
-        Process pr = rt.exec("C:\\Users\\Kyle\\release\\bin\\dot.exe -Tpng " + filePath + " -o " + filePath.substring(0,filePath.lastIndexOf("\\")) + "\\graph.png");
-
         //perform the connectivity check to make sure that the amount of nodes visited in the spanning tree matches that of the amount of nodes in the graph
         int spannedNodes = gui.connectivityCheck(tuple);
         System.out.println("TOTAL NUMBER OF NODES IN SPANNING TREE:\t" + spannedNodes);
@@ -64,5 +60,9 @@ public class Main {
 
         //perform dijkstra's shortest path algorithm utilizing a priority queue
         System.out.println(gui.dijkstraSPA("Artificial general intelligence - Wikipedia", "Second Life - Wikipedia"));
+
+        //save the visualization of the graph to a file
+        Runtime rt = Runtime.getRuntime();
+        Process pr = rt.exec("C:\\Users\\Kyle\\release\\bin\\dot.exe -Tpng " + filePath + " -o " + filePath.substring(0,filePath.lastIndexOf("\\")) + "\\graph.png");
     }
 }
